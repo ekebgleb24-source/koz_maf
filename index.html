@@ -1,1 +1,931 @@
-# koz_maf
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚔️ КОЗАЦЬКА МАФІЯ ⚔️</title>
+<style>
+/* ОСНОВНІ СТИЛІ */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    min-height: 100vh;
+    font-family: Georgia, "Times New Roman", serif;
+    color: #f5e6c8;
+    /* Глибокий, насичений фон */
+    background: radial-gradient(circle at top, #6b421f, #25160c 50%, #100905);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+}
+
+.game {
+    width: 100%;
+    max-width: 520px;
+    min-height: 650px;
+    background: #1b1009; /* Темний фон */
+    border: 2px solid #d6a84f; /* Золота рамка */
+    border-radius: 22px;
+    box-shadow: 0 20px 60px #000;
+    overflow: hidden;
+}
+
+.header {
+    padding: 15px;
+    text-align: center;
+    border-bottom: 1px solid #8c672f; /* Коричнева лінія */
+    color: #f0cd7b; /* Світло-золотий */
+    font-weight: bold;
+    letter-spacing: 1px;
+}
+
+.screen {
+    display: none;
+    padding: 30px 20px;
+}
+
+.screen.active {
+    display: block;
+}
+
+/* ГОЛОВНИЙ ЕКРАН */
+.logo {
+    text-align: center;
+    padding: 55px 10px 30px;
+}
+
+.logo-icon {
+    font-size: 80px;
+}
+
+h1 {
+    color: #f0cd7b;
+    font-size: 38px;
+    margin: 15px 0;
+}
+
+.subtitle {
+    color: #c8aa72;
+    line-height: 1.6;
+}
+
+.ornament {
+    color: #d6a84f;
+    text-align: center;
+    margin: 20px 0;
+    font-size: 22px;
+}
+
+/* КНОПКИ */
+button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 12px;
+    border-radius: 12px;
+    border: 1px solid #d6a84f;
+    background: linear-gradient(#865027, #512a15);
+    color: #ffe8ad;
+    font-family: inherit;
+    font-size: 17px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: transform 0.1s;
+}
+
+button:active {
+    transform: scale(0.98);
+}
+
+button.secondary {
+    background: #302015;
+}
+
+button.red {
+    background: linear-gradient(#9b3636, #5e1d1d);
+}
+
+button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* ЛІЧИЛЬНИКИ ТА ТЕКСТОВІ ЕЛЕМЕНТИ */
+.title {
+    text-align: center;
+    color: #f0cd7b;
+    font-size: 28px;
+    margin-bottom: 25px;
+}
+
+.counter {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 25px;
+    margin: 35px 0;
+}
+
+.counter button {
+    width: 60px;
+    height: 60px;
+    padding: 0;
+    border-radius: 50%;
+    font-size: 30px;
+}
+
+.number {
+    font-size: 50px;
+    font-weight: bold;
+    color: #f0cd7b;
+    min-width: 70px;
+    text-align: center;
+}
+
+.info {
+    text-align: center;
+    color: #c8aa72;
+    margin-bottom: 15px;
+}
+
+.error {
+    text-align: center;
+    color: #ff8989;
+    margin: 12px 0;
+}
+
+/* СПИСОК РОЛЕЙ */
+.role-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.role-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px;
+    background: #291910;
+    border: 1px solid #72502d;
+    border-radius: 13px;
+}
+
+.role-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1;
+}
+
+.role-icon {
+    font-size: 30px;
+    width: 40px;
+    text-align: center;
+}
+
+.role-name {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.role-controls {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.role-controls button {
+    width: 42px;
+    height: 42px;
+    padding: 0;
+    margin: 0;
+    border-radius: 50%;
+    font-size: 24px;
+}
+
+.role-count {
+    width: 35px;
+    text-align: center;
+    font-size: 21px;
+    font-weight: bold;
+    color: #f0cd7b;
+}
+
+.total-box {
+    margin-top: 20px;
+    padding: 15px;
+    text-align: center;
+    background: #35200f;
+    border: 1px solid #d6a84f;
+    border-radius: 12px;
+}
+
+.total-number {
+    font-size: 25px;
+    color: #f0cd7b;
+    font-weight: bold;
+}
+
+/* ПОЛЯ ВВОДУ ІМЕН */
+input {
+    width: 100%;
+    padding: 14px;
+    margin-bottom: 10px;
+    background: #140c07;
+    border: 1px solid #72502d;
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    outline: none;
+}
+
+.player {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.player-number {
+    color: #d6a84f;
+    font-weight: bold;
+}
+
+/* СТИЛІ ДЛЯ КАРТОК (ОНОВЛЕНО ДЛЯ ЗОБРАЖЕНЬ) */
+.progress {
+    height: 7px;
+    background: #382719;
+    border-radius: 20px;
+    overflow: hidden;
+    margin: 15px 0 25px;
+}
+
+.progress-bar {
+    height: 100%;
+    width: 0;
+    background: #d6a84f;
+    transition: 0.3s;
+}
+
+.card {
+    position: relative; /* Щоб накладати текст поверх */
+    width: 100%;
+    height: 400px; /* Висота для зображень */
+    border: 2px solid #d6a84f;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transition: opacity 0.3s ease;
+}
+
+.card-content {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    background: linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.7), rgba(0,0,0,0));
+    padding: 20px;
+    text-align: center;
+    border-bottom-left-radius: 18px;
+    border-bottom-right-radius: 18px;
+}
+
+.card-title {
+    font-size: 28px;
+    color: #f0cd7b;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.card-description {
+    color: #e4cda1;
+    line-height: 1.5;
+    font-size: 15px;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+}
+
+/* ФАЗИ ГРИ ТА ГОЛОСУВАННЯ */
+.phase-icon {
+    text-align: center;
+    font-size: 75px;
+    margin: 20px 0;
+}
+
+.phase-title {
+    text-align: center;
+    font-size: 38px;
+    color: #f0cd7b;
+}
+
+.phase-text {
+    text-align: center;
+    color: #dfc79b;
+    line-height: 1.7;
+    margin: 25px 0;
+}
+
+.action {
+    background: #291910;
+    border: 1px solid #72502d;
+    border-radius: 15px;
+    padding: 20px;
+    text-align: center;
+    margin-top: 25px;
+}
+
+.action h3 {
+    color: #f0cd7b;
+    margin-bottom: 10px;
+}
+
+.action p {
+    color: #c8aa72;
+    line-height: 1.6;
+}
+
+.vote {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 12px;
+    margin-bottom: 8px;
+    border: 1px solid #634525;
+    border-radius: 10px;
+    background: #26170e;
+}
+
+.vote span {
+    font-weight: bold;
+}
+
+.vote button {
+    width: auto;
+    margin: 0;
+    padding: 9px 12px;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* АДАПТИВНІСТЬ ДЛЯ МОБІЛЬНИХ ПРИСТРОЇВ */
+@media(max-width: 420px) {
+    body { padding: 0; }
+    .game {
+        min-height: 100vh;
+        border-radius: 0;
+        border-left: 0;
+        border-right: 0;
+    }
+    .card { height: 350px; }
+}
+</style>
+</head>
+<body>
+
+<div class="game">
+    <div class="header">
+        ⚔️ КОЗАЦЬКА МАФІЯ ⚔️
+    </div>
+
+    <!-- ГОЛОВНИЙ ЕКРАН -->
+    <section id="home" class="screen active">
+        <div class="logo">
+            <div class="logo-icon">⚔️</div>
+            <h1>Козацька<br>Мафія</h1>
+            <div class="ornament">⚜ ━━━━━ ⚜</div>
+            <div class="subtitle">
+                Вітаю, шановне панство!<br>
+                Готові розпочати таємну гру?
+            </div>
+        </div>
+        <button onclick="showPlayers()">⚔️ ПОЇХАЛИ</button>
+    </section>
+
+    <!-- КІЛЬКІСТЬ ГРАВЦІВ -->
+    <section id="players" class="screen">
+        <div class="title">👥 Кількість козаків</div>
+        <div class="info">Вкажіть кількість гравців</div>
+        <div class="counter">
+            <button onclick="changePlayers(-1)">−</button>
+            <div id="playerNumber" class="number">8</div>
+            <button onclick="changePlayers(1)">+</button>
+        </div>
+        <button onclick="showRoles()">ДАЛІ →</button>
+    </section>
+
+    <!-- ВИБІР КІЛЬКОСТІ РОЛЕЙ -->
+    <section id="roles" class="screen">
+        <div class="title">🎴 Виберіть ролі</div>
+        <div class="info">Встановіть кількість кожної ролі</div>
+        <div id="roleList" class="role-list"></div>
+        <div class="total-box">
+            Всього ролей:
+            <div id="totalRoles" class="total-number">0 / 8</div>
+        </div>
+        <div id="roleError" class="error"></div>
+        <button onclick="showNames()">ДАЛІ →</button>
+    </section>
+
+    <!-- ІМЕНА -->
+    <section id="names" class="screen">
+        <div class="title">✍️ Назви гравців</div>
+        <div class="info">Введіть імена козаків</div>
+        <div id="namesList"></div>
+        <button onclick="startDeal()">🎴 РОЗДАТИ КАРТИ</button>
+    </section>
+
+    <!-- РОЗДАЧА -->
+    <section id="deal" class="screen">
+        <div class="title">🎴 Таємна карта</div>
+        <div id="dealPlayer" class="info"></div>
+        <div class="progress">
+            <div id="progressBar" class="progress-bar"></div>
+        </div>
+
+        <div id="closedCard" class="card" style="background-image: url('https://image.spreadshirtmedia.net/image-server/v1/mp/products/T812A2MPA3140PT17X23Y23D1031388675W2121H1888/views/1,width=378,height=378,appearanceId=2,backgroundColor=F2F2F2,modelId=115,crop=design,modelId=115/card-back.jpg');">
+            <div class="card-content">
+                <div class="card-title">Таємна карта</div>
+                <div class="card-description">
+                    Натисніть кнопку нижче.<br>
+                    Переконайтеся, що ніхто не дивиться.
+                </div>
+            </div>
+        </div>
+
+        <div id="openCard" class="card hidden">
+            <div class="card-content">
+                <div id="roleTitle" class="card-title"></div>
+                <div id="roleDescription" class="card-description"></div>
+            </div>
+        </div>
+
+        <button id="showButton" onclick="showRole()">👁️ ПОКАЗАТИ КАРТУ</button>
+        <button id="hideButton" class="secondary hidden" onclick="hideRole()">🔒 СХОВАТИ КАРТУ</button>
+        <button id="nextButton" class="hidden" onclick="nextPlayer()">ПЕРЕДАТИ НАСТУПНОМУ →</button>
+    </section>
+
+    <!-- ПОЧАТОК ГРИ -->
+    <section id="startGame" class="screen">
+        <div class="phase-icon">🕯️</div>
+        <div class="phase-title">Гра починається</div>
+        <div class="ornament">⚜ ━━━ ⚜</div>
+        <div class="phase-text">
+            Усі гравці отримали свої ролі.<br><br>
+            Тепер телефон залишається у ведучого.
+        </div>
+        <button onclick="startNight()">🌙 ПОЧАТИ НІЧ</button>
+    </section>
+
+    <!-- НІЧ -->
+    <section id="night" class="screen">
+        <div class="phase-icon">🌙</div>
+        <div class="phase-title">НІЧ</div>
+        <div id="nightNumber" class="info">Ніч 1</div>
+        <div id="nightAction" class="action"></div>
+        <button id="nightButton" onclick="nextNight()">ГОТОВО →</button>
+    </section>
+
+    <!-- РАНОК -->
+    <section id="morning" class="screen">
+        <div class="phase-icon">☀️</div>
+        <div class="phase-title">РАНОК</div>
+        <div id="morningNumber" class="info"></div>
+        <div class="phase-text">
+            Ніч завершилася.<br><br>
+            Ведучий оголошує події ночі.
+        </div>
+        <button onclick="startDiscussion()">🗣️ ОБГОВОРЕННЯ</button>
+    </section>
+
+    <!-- ОБГОВОРЕННЯ -->
+    <section id="discussion" class="screen">
+        <div class="phase-icon">🗣️</div>
+        <div class="phase-title">ОБГОВОРЕННЯ</div>
+        <div id="discussionNumber" class="info"></div>
+        <div class="phase-text">
+            Козаки обговорюють події,
+            підозрюють один одного та
+            намагаються знайти мафіозі.
+        </div>
+        <button onclick="startVoting()">🗳️ ГОЛОСУВАННЯ</button>
+    </section>
+
+    <!-- ГОЛОСУВАННЯ -->
+    <section id="voting" class="screen">
+        <div class="phase-icon">🗳️</div>
+        <div class="phase-title">ГОЛОСУВАННЯ</div>
+        <div id="votingNumber" class="info"></div>
+        <div class="phase-text">Кого громада вирішила вигнати?</div>
+        <div id="votingList"></div>
+    </section>
+
+    <!-- КІНЕЦЬ -->
+    <section id="end" class="screen">
+        <div class="phase-icon">🏆</div>
+        <div id="winnerTitle" class="phase-title">Перемога!</div>
+        <div id="winnerText" class="phase-text"></div>
+        <button onclick="newGame()">🔄 НОВА ГРА</button>
+    </section>
+</div>
+
+<script>
+// ГЛОБАЛЬНІ ЗМІННІ
+let playerCount = 8;
+let players = [];
+let roleCounts = {};
+let currentPlayerIndex = 0;
+let nightNumber = 1;
+let currentNightActionStep = 0;
+
+// ДАНІ РОЛЕЙ (ОНОВЛЕНО З ПОСИЛАННЯМИ НА ЗОБРАЖЕННЯ)
+const roles = {
+    hetman: {
+        name: "Гетьман",
+        icon: "👑",
+        img: "https://generativelabs.co/p/hetman.png", // Посилання на Гетьмана
+        description: "Ви — головний мирний житель. Тримайте громаду разом."
+    },
+    cossack: {
+        name: "Козак",
+        icon: "⚔️",
+        img: "https://generativelabs.co/p/cossack.png", // Посилання на Козака
+        description: "Ви — комісар. Вночі перевіряйте одного гравця."
+    },
+    malfar: {
+        name: "Мальфар",
+        icon: "🧙",
+        img: "https://generativelabs.co/p/malfar.png", // Посилання на Мальфара
+        description: "Ви — лікар. Вночі можете врятувати одного гравця."
+    },
+    mafiosi: {
+        name: "Мафіозі",
+        icon: "🔴",
+        img: "https://generativelabs.co/p/mafiosi.png", // Посилання на Мафіозі
+        description: "Ви — мафіозі. Вночі обирайте жертву."
+    },
+    homeless: {
+        name: "Безхатько",
+        icon: "🏚️",
+        img: "https://generativelabs.co/p/homeless.png", // Посилання на Безхатька
+        description: "Вночі приходите в гості до гравця та блокуєте його здатність."
+    },
+    scary: {
+        name: "Страшко",
+        icon: "😈",
+        img: "https://generativelabs.co/p/scary.png", // Посилання на Страшка
+        description: "Ви — маніяк. Можете вбити будь-якого гравця."
+    },
+    peasant: {
+        name: "Селянин",
+        icon: "🌾",
+        img: "https://generativelabs.co/p/peasant.png", // Посилання на Селянина
+        description: "Ви — мирний житель. Допоможіть громаді знайти мафіозі."
+    },
+    priest: {
+        name: "Священик",
+        icon: "✝️",
+        img: "https://generativelabs.co/p/priest.png", // Посилання на Священика
+        description: "Можете дати імунітет від мафії (раз на два кола)."
+    },
+    mavka: {
+        name: "Мавка",
+        icon: "🌿",
+        img: "https://generativelabs.co/p/mavka.png", // Посилання на Мавку
+        description: "Ваша мета — бути вигнаною громадою під час голосування."
+    }
+};
+
+// ХІД НОЧІ
+const nightActions = [
+    { key: "homeless", text: "Безхатько прокидається та йде в гості." },
+    { key: "mafiosi", text: "Мафіозі прокидаються та обирають жертву." },
+    { key: "malfar", text: "Мальфар прокидається та обирає, кого врятувати." },
+    { key: "cossack", text: "Козак прокидається та робить перевірку." },
+    { key: "scary", text: "Страшко прокидається та обирає будь-якого гравця." },
+    { key: "priest", text: "Священик може використати свій імунітет." }
+];
+
+// ДОПОМІЖНІ ФУНКЦІЇ
+function showScreen(id) {
+    document.querySelectorAll(".screen").forEach(s => s.classList.remove("active"));
+    document.getElementById(id).classList.add("active");
+}
+
+function shuffle(array) {
+    for (let i = array.length - 1; i > 0; i--) {
+        let j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+    }
+}
+
+function getTotalSelectedRoles() {
+    return Object.values(roleCounts).reduce((a, b) => a + b, 0);
+}
+
+function resetRoleCounts() {
+    roleCounts = {};
+    Object.keys(roles).forEach(key => roleCounts[key] = 0);
+}
+
+function updateRoleCountDisplay(key) {
+    document.getElementById(`count-${key}`).textContent = roleCounts[key];
+    updateTotalRolesBox();
+}
+
+function updateTotalRolesBox() {
+    let total = getTotalSelectedRoles();
+    let totalBox = document.getElementById("totalRoles");
+    totalBox.textContent = `${total} / ${playerCount}`;
+    totalBox.parentElement.style.borderColor = (total === playerCount) ? "#55cc55" : "#d6a84f";
+}
+
+// ЛОГІКА ІНТЕРФЕЙСУ
+
+// 1. ГОЛОВНИЙ -> КІЛЬКІСТЬ ГРАВЦІВ
+function showPlayers() {
+    showScreen("players");
+}
+
+// 2. ЗМІНА КІЛЬКОСТІ ГРАВЦІВ
+function changePlayers(val) {
+    playerCount += val;
+    if (playerCount < 4) playerCount = 4;
+    if (playerCount > 20) playerCount = 20;
+    document.getElementById("playerNumber").textContent = playerCount;
+}
+
+// 3. КІЛЬКІСТЬ ГРАВЦІВ -> ВИБІР РОЛЕЙ
+function showRoles() {
+    resetRoleCounts();
+    createRoleListUI();
+    updateTotalRolesBox();
+    showScreen("roles");
+}
+
+// 4. СТВОРЕННЯ СПИСКУ РОЛЕЙ В UI
+function createRoleListUI() {
+    const list = document.getElementById("roleList");
+    list.innerHTML = "";
+    Object.keys(roles).forEach(key => {
+        const r = roles[key];
+        const row = document.createElement("div");
+        row.className = "role-row";
+        row.innerHTML = `
+            <div class="role-info">
+                <div class="role-icon">${r.icon}</div>
+                <div class="role-name">${r.name}</div>
+            </div>
+            <div class="role-controls">
+                <button onclick="changeRole('${key}', -1)">−</button>
+                <div id="count-${key}" class="role-count">0</div>
+                <button onclick="changeRole('${key}', 1)">+</button>
+            </div>
+        `;
+        list.appendChild(row);
+    });
+}
+
+// 5. ЗМІНА КІЛЬКОСТІ КОНКРЕТНОЇ РОЛІ
+function changeRole(key, val) {
+    let total = getTotalSelectedRoles();
+    if (val > 0 && total >= playerCount) {
+        document.getElementById("roleError").textContent = `Для ${playerCount} гравців більше ролей додати не можна.`;
+        return;
+    }
+    
+    if (roleCounts[key] + val >= 0) {
+        roleCounts[key] += val;
+        updateRoleCountDisplay(key);
+        document.getElementById("roleError").textContent = "";
+    }
+}
+
+// 6. ВИБІР РОЛЕЙ -> ВВЕДЕННЯ ІМЕН
+function showNames() {
+    if (getTotalSelectedRoles() !== playerCount) {
+        document.getElementById("roleError").textContent = `Потрібно вибрати рівно ${playerCount} ролей.`;
+        return;
+    }
+    const list = document.getElementById("namesList");
+    list.innerHTML = "";
+    for (let i = 0; i < playerCount; i++) {
+        list.innerHTML += `
+            <div class="player">
+                <div class="player-number">${i+1}.</div>
+                <input id="name${i}" type="text" placeholder="Ім'я козака ${i+1}">
+            </div>
+        `;
+    }
+    showScreen("names");
+}
+
+// 7. ВВЕДЕННЯ ІМЕН -> РОЗДАЧА КАРТ
+function startDeal() {
+    players = [];
+    for (let i = 0; i < playerCount; i++) {
+        let nameInp = document.getElementById(`name${i}`).value.trim();
+        players.push({
+            name: nameInp || `Козак ${i+1}`,
+            role: null,
+            alive: true
+        });
+    }
+
+    let deck = [];
+    Object.keys(roleCounts).forEach(key => {
+        for (let i = 0; i < roleCounts[key]; i++) deck.push(key);
+    });
+    shuffle(deck);
+    players.forEach((p, i) => p.role = deck[i]);
+
+    currentPlayerIndex = 0;
+    prepareNextCardUI();
+    showScreen("deal");
+}
+
+// 8. ПІДГОТОВКА ДО ПОКАЗУ КАРТИ (ЗАКРИТОЇ)
+function prepareNextCardUI() {
+    let p = players[currentPlayerIndex];
+    document.getElementById("dealPlayer").textContent = `${p.name} (Гравець ${currentPlayerIndex+1})`;
+    document.getElementById("progressBar").style.width = `${(currentPlayerIndex/playerCount)*100}%`;
+    
+    document.getElementById("closedCard").classList.remove("hidden");
+    document.getElementById("openCard").classList.add("hidden");
+    document.getElementById("showButton").classList.remove("hidden");
+    document.getElementById("hideButton").classList.add("hidden");
+    document.getElementById("nextButton").classList.add("hidden");
+}
+
+// 9. ПОКАЗАТИ ВІДКРИТУ КАРТУ
+function showRole() {
+    let p = players[currentPlayerIndex];
+    let r = roles[p.role];
+
+    let openCard = document.getElementById("openCard");
+    openCard.style.backgroundImage = `url('${r.img}')`; // Завантаження згенерованого зображення
+    document.getElementById("roleTitle").textContent = r.name;
+    document.getElementById("roleDescription").textContent = r.description;
+
+    document.getElementById("closedCard").classList.add("hidden");
+    openCard.classList.remove("hidden");
+    document.getElementById("showButton").classList.add("hidden");
+    document.getElementById("hideButton").classList.remove("hidden");
+}
+
+// 10. СХОВАТИ КАРТУ ТА ПІДГОТОВИТИСЯ ДО НАСТУПНОГО ГРАВЦЯ
+function hideRole() {
+    document.getElementById("openCard").classList.add("hidden");
+    document.getElementById("closedCard").classList.remove("hidden");
+    document.getElementById("hideButton").classList.add("hidden");
+    document.getElementById("nextButton").classList.remove("hidden");
+
+    if (currentPlayerIndex === playerCount - 1) {
+        document.getElementById("nextButton").textContent = "⚔️ ПОЧАТИ ГРУ";
+    }
+}
+
+// 11. ПЕРЕХІД ДО НАСТУПНОГО ГРАВЦЯ АБО КІНЦЯ РОЗДАЧІ
+function nextPlayer() {
+    if (currentPlayerIndex < playerCount - 1) {
+        currentPlayerIndex++;
+        prepareNextCardUI();
+    } else {
+        showScreen("startGame");
+    }
+}
+
+// ЛОГІКА ІГРОВИХ ФАЗ
+
+// 12. ПОЧАТОК НОЧІ
+function startNight() {
+    currentNightActionStep = 0;
+    updateNightActionUI();
+    showScreen("night");
+}
+
+// 13. ОНОВЛЕННЯ ЕКРАНУ НІЧНОЇ ДІЇ (ДЛЯ ВЕДУЧОГО)
+function updateNightActionUI() {
+    let action = nightActions[currentNightActionStep];
+    let r = roles[action.key];
+
+    document.getElementById("nightNumber").textContent = `Ніч ${nightNumber}`;
+    let actBox = document.getElementById("nightAction");
+    actBox.innerHTML = `<h3>${r.icon} ${r.name}</h3><p>${action.text}</p>`;
+
+    if (currentNightActionStep === nightActions.length - 1) {
+        document.getElementById("nightButton").textContent = "☀️ ЗУСТРІЧАЙМО РАНОК";
+    } else {
+        document.getElementById("nightButton").textContent = "ГОТОВО →";
+    }
+}
+
+// 14. ПЕРЕХІД ДО НАСТУПНОЇ НІЧНОЇ ДІЇ АБО РАНКУ
+function nextNight() {
+    if (currentNightActionStep < nightActions.length - 1) {
+        currentNightActionStep++;
+        updateNightActionUI();
+    } else {
+        showMorning();
+    }
+}
+
+// 15. ПОКАЗ ЕКРАНУ РАНКУ
+function showMorning() {
+    document.getElementById("morningNumber").textContent = `Ранок ${nightNumber}`;
+    showScreen("morning");
+}
+
+// 16. ПОКАЗ ЕКРАНУ ОБГОВОРЕННЯ
+function startDiscussion() {
+    document.getElementById("discussionNumber").textContent = `День ${nightNumber}`;
+    showScreen("discussion");
+}
+
+// 17. ПОКАЗ ЕКРАНУ ГОЛОСУВАННЯ ТА СТВОРЕННЯ СПИСКУ ГРАВЦІВ
+function startVoting() {
+    const list = document.getElementById("votingList");
+    list.innerHTML = "";
+    document.getElementById("votingNumber").textContent = `День ${nightNumber}`;
+
+    players.forEach((p, i) => {
+        if (!p.alive) return;
+        list.innerHTML += `
+            <div class="vote">
+                <span>👤 ${p.name}</span>
+                <button class="red" onclick="eliminatePlayer(${i})">ВИГНАТИ</button>
+            </div>
+        `;
+    });
+    showScreen("voting");
+}
+
+// 18. ЛОГІКА ВИЛУЧЕННЯ ГРАВЦЯ ТА ПЕРЕВІРКИ УМОВ ПЕРЕМОГИ
+function eliminatePlayer(index) {
+    let p = players[index];
+    p.alive = false;
+    alert(`${p.name} вибув(ла) із гри. Роль: ${roles[p.role].name}`);
+
+    if (p.role === "mavka") {
+        showEndGameScreen("🌿 МАВКА ПЕРЕМОГЛА!", "Вона домоглася свого вигнання.");
+        return;
+    }
+
+    if (checkEndGameConditions()) return;
+
+    nightNumber++;
+    startNight();
+}
+
+// 19. ПЕРЕВІРКА УМОВ ЗАКІНЧЕННЯ ГРИ
+function checkEndGameConditions() {
+    let alive = players.filter(p => p.alive);
+    let mafia = alive.filter(p => p.role === "mafiosi");
+    let scary = alive.filter(p => p.role === "scary");
+
+    // Мирні
+    if (mafia.length === 0 && scary.length === 0) {
+        showEndGameScreen("⚔️ КОЗАКИ ПЕРЕМОГЛИ!", "Усі загрози усунено.");
+        return true;
+    }
+    // Мафія
+    if (mafia.length > 0 && mafia.length >= (alive.length - mafia.length - scary.length)) {
+        showEndGameScreen("🔴 МАФІЯ ПЕРЕМОГЛА!", "Зрадники отримали більшість.");
+        return true;
+    }
+    // Маніяк
+    if (scary.length > 0 && alive.length <= 2 && mafia.length === 0) {
+        showEndGameScreen("😈 СТРАШКО ПЕРЕМІГ!", "Маніяк залишився один.");
+        return true;
+    }
+    return false;
+}
+
+// 20. ПОКАЗ ЕКРАНУ ПЕРЕМОГИ
+function showEndGameScreen(title, text) {
+    document.getElementById("winnerTitle").textContent = title;
+    document.getElementById("winnerText").textContent = text;
+    showScreen("end");
+}
+
+// 21. ПОЧАТИ НОВУ ГРУ (СКИДАННЯ)
+function newGame() {
+    players = [];
+    resetRoleCounts();
+    currentPlayerIndex = 0;
+    nightNumber = 1;
+    currentNightActionStep = 0;
+    showScreen("home");
+}
+</script>
+</body>
+</html>
